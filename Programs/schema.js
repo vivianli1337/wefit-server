@@ -1,23 +1,23 @@
 import mongoose from "mongoose";
 
-const programSchema = new mongoose.Schema(
-  {
-    programId: { type: String, required: true, unique: true },
-    programName: { type: String, required: true },
-    programCreator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // References the Trainer user
-      required: true,
+const programSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: String,
+  trainer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  exercises: [
+    {
+      exerciseId: String,
+      name: String,
+      target: String,
+      equipment: String,
+      gifUrl: String,
+      sets: Number,
+      reps: Number,
     },
-    numberOfWeeks: { type: Number, required: true },
-    programData: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Workout", // References the Workout schema
-      },
-    ],
-  },
-  { collection: "programs", timestamps: true }
-);
+  ],
+  duration: Number,
+  difficulty: { type: String, enum: ["Beginner", "Intermediate", "Advanced"] },
+}, { collection: "programs", timestamps: true });
 
-export default mongoose.model("Program", programSchema);
+const ProgramModel = mongoose.models.Program || mongoose.model("Program", programSchema);
+export default ProgramModel;
