@@ -1,8 +1,9 @@
+import mongoose from "mongoose";
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import session from "express-session";
-import mongoose from "mongoose";
+
+
 
 // Import routes
 import exerciseRoutes from "./Exercises/routes.js";
@@ -10,6 +11,8 @@ import programRoutes from "./Programs/routes.js";
 import userRoutes from "./Users/routes.js";
 import postRoutes from "./Posts/routes.js";
 import enrollmentRoutes from "./Enrollments/routes.js";
+
+import session from "express-session";
 
 // Initialize Express app
 const app = express();
@@ -32,6 +35,8 @@ mongoose.connection.once("open", () => {
   console.log("MongoDB connection established.");
 });
 
+app.use(express.json()); // Parse JSON payloads
+
 // Middleware
 app.use(
   cors({
@@ -39,7 +44,7 @@ app.use(
     origin: process.env.NETLIFY_URL || "http://localhost:3000",
   })
 );
-app.use(express.json()); // Parse JSON payloads
+
 
 // Session configuration
 const sessionOptions = {
@@ -63,7 +68,6 @@ app.use("/api/programs", programRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
-
 
 
 app.get("/hello", (req, res) => {
