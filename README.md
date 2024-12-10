@@ -137,10 +137,3 @@ node importExercises.js
 
 4. **Missing Collections**:
    - Ensure the JSON files are correctly imported into MongoDB.
-
----
-
-## **License**
-This project is licensed under the MIT License.
-
----
