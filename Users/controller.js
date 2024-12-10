@@ -19,13 +19,20 @@ export const getAllUsers = async (req, res) => {
 };
 
 export const getUserById = async (req, res) => {
+  console.log("Fetching user with ID:", req.params.id); // Log the ID being fetched
   try {
     const user = await UserService.getUserById(req.params.id);
+    if (!user) {
+      console.log("User not found with ID:", req.params.id); // Log when no user is found
+      return res.status(404).json({ error: "User not found" });
+    }
     res.status(200).json(user);
   } catch (error) {
-    res.status(404).json({ error: "User not found" });
+    console.error("Error in getUserById:", error.message); // Log any errors
+    res.status(500).json({ error: error.message });
   }
 };
+
 
 export const searchUsersByPartialNameOrEmail = async (req, res) => {
   try {
@@ -66,3 +73,53 @@ export const login = async (req, res) => {
       res.status(401).json({ error: error.message });
     }
   };
+
+  //Get profile (hide password field)
+  export const getProfile = async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ error: "Authorization token missing or malformed" });
+      }
+  
+      const token = authHeader.split(" ")[1];
+      const decoded = UserService.verifyToken(token);
+  
+      const user = await UserService.getUserById(decoded.userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+  
+      // Exclude sensitive fields like password
+      const { password, ...userWithoutPassword } = user.toObject();
+      res.status(200).json(userWithoutPassword);
+    } catch (error) {
+      console.error("Error in getProfile:", error.message);
+      res.status(401).json({ error: "Invalid or expired token" });
+    }
+  };
+
+// Logout
+export const logout = async (req, res) => {
+  try {
+    console.log("Logout initiated");
+    await new Promise((resolve, reject) =>
+      req.session.destroy((err) => {
+        if (err) {
+          console.error("Failed to destroy session:", err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      })
+    );
+
+    console.log("Session destroyed");
+    res.clearCookie("connect.sid");
+    console.log("Cookie cleared");
+    return res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Error during logout:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
