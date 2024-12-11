@@ -1,15 +1,10 @@
+// import mongoose from "mongoose";
+// import schema from "./schema.js";
+// const ExerciseModel = mongoose.model("Exercise", schema);
+// export default ExerciseModel;
+
 import mongoose from "mongoose";
+import schema from "./schema.js";
 
-const exerciseSchema = new mongoose.Schema(
-  {
-    exerciseId: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    target: { type: String, required: true },
-    equipment: { type: String, required: true },
-    gifUrl: { type: String, required: true },
-  },
-  { collection: "exercises", timestamps: true }
-);
-
-const ExerciseModel = mongoose.model("Exercise", exerciseSchema);
+const ExerciseModel = mongoose.model("Exercise", schema);
 export default ExerciseModel;
