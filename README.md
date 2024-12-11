@@ -28,7 +28,7 @@ This is the backend server for the **WeFit** fitness application, built with Nod
 
 3. Create a `.env` file in the root directory with the following content:
    ```env
-   MONGO_CONNECTION_STRING=mongodb://127.0.0.1:27017/
+   MONGO_CONNECTION_STRING=mongodb://127.0.0.1:27017/your-db-name
    RAPIDAPI_KEY=your-rapidapi-key
    SESSION_SECRET=your-secret-key
    NETLIFY_URL=http://localhost:3000
